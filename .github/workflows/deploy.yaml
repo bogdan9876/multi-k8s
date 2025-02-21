@@ -18,9 +18,12 @@ jobs:
         source $HOME/google-cloud-sdk/path.bash.inc
         gcloud components update kubectl
 
+    - name: Debug JSON Format
+      run: cat $HOME/service-account.json | jq .
+
     - name: Authenticate with Google Cloud
       run: |
-        echo "${{ secrets.GCP_CREDENTIALS }}" > $HOME/service-account.json
+        printf "%s" "${{ secrets.GCP_CREDENTIALS }}" > $HOME/service-account.json
         gcloud auth activate-service-account --key-file $HOME/service-account.json
         gcloud config set project multi-k8s-451513
         gcloud config set compute/zone europe-central2-b
