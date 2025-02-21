@@ -20,8 +20,8 @@ jobs:
 
     - name: Authenticate with Google Cloud
       run: |
-        echo "${{ secrets.GCP_CREDENTIALS }}" | jq . > $HOME/service-account.json
-        gcloud auth activate-service-account --key-file=$HOME/service-account.json
+        echo "${{ secrets.GCP_CREDENTIALS }}" > $HOME/service-account.json
+        gcloud auth activate-service-account --key-file $HOME/service-account.json
         gcloud config set project multi-k8s-451513
         gcloud config set compute/zone europe-central2-b
         gcloud container clusters get-credentials multi-cluster
