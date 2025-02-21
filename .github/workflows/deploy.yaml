@@ -21,6 +21,7 @@ jobs:
         curl https://sdk.cloud.google.com | bash > /dev/null
         source $HOME/google-cloud-sdk/path.bash.inc
         gcloud components update kubectl
+        gcloud components install gke-gcloud-auth-plugin
 
     - name: Authenticate with Google Cloud
       run: |
