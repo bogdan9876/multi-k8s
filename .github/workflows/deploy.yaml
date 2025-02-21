@@ -8,39 +8,44 @@ on:
 env:
   SHA: ${{ github.sha }}
   CLOUDSDK_CORE_DISABLE_PROMPTS: true
-  USE_GKE_GCLOUD_AUTH_PLUGIN: true
 
 jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Google Cloud SDK
-      run: |
-        curl https://sdk.cloud.google.com | bash > /dev/null
-        source $HOME/google-cloud-sdk/path.bash.inc
-        gcloud components update kubectl
-        gcloud components install gke-gcloud-auth-plugin
-        gcloud container clusters get-credentials multi-cluster --zone=europe-central2-b
-  
-    - name: Authenticate with Google Cloud
-      run: |
-        echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > $HOME/service-account.json
-        gcloud auth activate-service-account --key-file $HOME/service-account.json
-        gcloud config set project multi-k8s-451513
-        gcloud config set compute/zone europe-central2-b
-        gcloud container clusters get-credentials multi-cluster
+      - name: Set up Google Cloud SDK
+        run: |
+          curl https://sdk.cloud.google.com | bash > /dev/null
+          source $HOME/google-cloud-sdk/path.bash.inc
+          gcloud components update kubectl
+          gcloud components install gke-gcloud-auth-plugin
 
-    - name: Docker login
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Authenticate with Google Cloud
+        run: |
+          echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > $HOME/service-account.json
+          gcloud auth activate-service-account --key-file $HOME/service-account.json
+          gcloud config set project multi-k8s-451513
+          gcloud config set compute/zone europe-central2-b
 
-    - name: Docker build image
-      run: docker build -t etenity/react-test -f client/Dockerfile.dev ./client
+      - name: Get Kubernetes Cluster Credentials
+        run: |
+          gcloud container clusters get-credentials multi-cluster --zone=europe-central2-b
 
-    - name: Docker execute
-      run: docker run -e CI=true etenity/react-test npm test
+      - name: Docker login
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    - name: Script
-      run: bash deploy.sh
+      - name: Docker build image
+        run: |
+          docker build -t etenity/react-test -f client/Dockerfile.dev ./client
+
+      - name: Docker execute
+        run: |
+          docker run -e CI=true etenity/react-test npm test
+
+      - name: Deploy with script
+        run: |
+          bash deploy.sh
