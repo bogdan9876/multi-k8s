@@ -30,7 +30,7 @@ jobs:
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
     - name: Docker build image
-      run: docker build -t etenity/react-test -f .client/Dockerfile.dev ./client
+      run: docker build -t etenity/react-test -f client/Dockerfile.dev ./client
 
     - name: Docker execute
       run: docker run -e CI=true etenity/react-test npm test
