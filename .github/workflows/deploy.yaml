@@ -23,8 +23,8 @@ jobs:
         source $HOME/google-cloud-sdk/path.bash.inc
         gcloud components update kubectl
         gcloud components install gke-gcloud-auth-plugin
-        gcloud container clusters get-credentials multi-cluster \ --region=europe-central2-b
-
+        gcloud container clusters get-credentials multi-cluster --zone=europe-central2-b
+  
     - name: Authenticate with Google Cloud
       run: |
         echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > $HOME/service-account.json
