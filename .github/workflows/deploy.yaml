@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+env:
+  SHA: ${{ github.sha }}
+  CLOUDSDK_CORE_DISABLE_PROMPTS: true
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -34,3 +38,6 @@ jobs:
 
     - name: Docker execute
       run: docker run -e CI=true etenity/react-test npm test
+
+    - name: Script
+      run: bash deploy.sh
