@@ -8,7 +8,7 @@ on:
 env:
   SHA: ${{ github.sha }}
   CLOUDSDK_CORE_DISABLE_PROMPTS: true
-  USE_GKE_GCLOUD_AUTH_PLUGIN: false
+  USE_GKE_GCLOUD_AUTH_PLUGIN: true
 
 jobs:
   build:
@@ -33,7 +33,8 @@ jobs:
 
       - name: Get Kubernetes Cluster Credentials
         run: |
-          gcloud container clusters get-credentials multi-cluster --zone=europe-central2-b
+          export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+          gcloud container clusters get-credentials multi-cluster --zone=europe-central2-b --project=multi-k8s-451513
 
       - name: Docker login
         run: |
