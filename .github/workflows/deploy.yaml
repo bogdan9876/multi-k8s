@@ -30,9 +30,12 @@ jobs:
           gcloud config set project multi-k8s-451513
           gcloud config set compute/zone europe-central2-b
 
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+
       - name: Get Kubernetes Cluster Credentials
         run: |
-          sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
           gcloud container clusters get-credentials multi-cluster --zone=europe-central2-b
 
       - name: Docker login
