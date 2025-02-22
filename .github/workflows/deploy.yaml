@@ -23,7 +23,11 @@ jobs:
           source $HOME/google-cloud-sdk/path.bash.inc
           gcloud components update kubectl
           gcloud components install gke-gcloud-auth-plugin
-          
+
+      - name: Verify gke-gcloud-auth-plugin installation
+        run: |
+          gke-gcloud-auth-plugin --version
+
       - name: Authenticate with Google Cloud
         run: |
           echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > $HOME/service-account.json
