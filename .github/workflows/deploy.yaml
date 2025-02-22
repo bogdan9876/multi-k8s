@@ -22,17 +22,14 @@ jobs:
           curl https://sdk.cloud.google.com | bash > /dev/null
           source $HOME/google-cloud-sdk/path.bash.inc
           gcloud components install kubectl
-
+          gcloud components install gke-gcloud-auth-plugin
+          
       - name: Authenticate with Google Cloud
         run: |
           echo "${{ secrets.GCP_CREDENTIALS }}" | base64 -d > $HOME/service-account.json
           gcloud auth activate-service-account --key-file $HOME/service-account.json
           gcloud config set project multi-k8s-451513
           gcloud config set compute/zone europe-central2-b
-
-      - name: Install GKE gcloud authentication plugin
-        run: |
-          gcloud components install gke-gcloud-auth-plugin
 
       - name: Get Kubernetes Cluster Credentials
         run: |
