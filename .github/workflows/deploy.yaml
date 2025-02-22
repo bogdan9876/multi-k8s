@@ -19,11 +19,11 @@ jobs:
 
       - name: Set up Google Cloud SDK
         run: |
-          curl https://sdk.cloud.google.com | bash > /dev/null
-          source $HOME/google-cloud-sdk/path.bash.inc
-          gcloud components update kubectl
-          gcloud components install gke-gcloud-auth-plugin
-
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+          sudo apt update
+          sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
+      
       - name: Verify gke-gcloud-auth-plugin installation
         run: |
           gke-gcloud-auth-plugin --version
@@ -34,6 +34,7 @@ jobs:
           gcloud auth activate-service-account --key-file $HOME/service-account.json
           gcloud config set project multi-k8s-451513
           gcloud config set compute/zone europe-central2-b
+          gcloud container clusters get-credentials multi-cluster
 
       - name: Get Kubernetes Cluster Credentials
         run: |
