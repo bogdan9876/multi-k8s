@@ -8,6 +8,7 @@ on:
 env:
   SHA: ${{ github.sha }}
   CLOUDSDK_CORE_DISABLE_PROMPTS: true
+  USE_GKE_GCLOUD_AUTH_PLUGIN: false
 
 jobs:
   build:
